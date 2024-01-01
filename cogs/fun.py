@@ -23,5 +23,8 @@ class FunCommands(commands.Cog):
         if 'owo' in message.content.lower():
             await message.channel.send("What's This?")
 
+        elif 'wafer' in message.content.lower():
+            await message.channel.send("wafer")
+
 async def setup(bot):
     await bot.add_cog(FunCommands(bot))
