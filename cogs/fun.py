@@ -20,7 +20,7 @@ class FunCommands(commands.Cog):
         if message.author == self.bot.user:
             return
 
-        if 'owo' in message.content.lower():
+        if 'uwu' in message.content.lower():
             await message.channel.send("What's This?")
 
 async def setup(bot):
