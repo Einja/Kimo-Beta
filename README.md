@@ -21,4 +21,9 @@ This Discord bot is designed to interact with users and provide specific osu! st
 - **Example**: /stats Einja ==> `Name: Einja. Current rank in standard: #3023`
 
 ## Installation and Setup
-WIP
+If you would like to simulate this on your own discord bot, follow the instructions listed (You MUST have your own discord bot, discord server, and OAuth Application to use this).
+1) Download this source code.
+2) Open your terminal, go to config.json and replace the filler values with actual tokens.
+3) Run `pip install -r requirements.txt`
+4) Execute main.py
+5) To shutdown, press Ctrl+C while in the terminal.
