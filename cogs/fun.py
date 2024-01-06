@@ -15,6 +15,17 @@ class FunCommands(commands.Cog):
     async def hi(self, ctx: discord.Interaction):
         await ctx.response.send_message(f'hello {ctx.user.mention}!')
 
+    @app_commands.command(name="poke", description="Ping another user!")
+    async def poke(self, ctx: discord.Interaction, user: discord.Member):
+        try:
+            if ctx.user == user:
+                await ctx.response.send_message("Poking yourself huh...?")
+            else:
+                await ctx.response.send_message(f"{ctx.user.mention} poked {user.mention}!")
+        except:
+            await ctx.response.send_message(f"User {user.display_name} was not found in this server!")
+
+
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.author == self.bot.user:
