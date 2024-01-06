@@ -3,7 +3,7 @@
 ## Description
 
 Kimo is a discord bot that fetches information from the osu!API and displays various information depending on which command you type in.
-This Discord bot is designed to interact with users and provide specific osu! stats. It currently supports two main commands: `/hi` and `/stats`.
+This Discord bot is designed to interact with users and provide specific osu! stats. It currently supports 3 commands.
 
 ## Commands
 
