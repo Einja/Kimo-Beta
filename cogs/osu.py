@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 from discord import app_commands
-from ossapi import Ossapi, GameMode, UserLookupKey
+from ossapi import GameMode, UserLookupKey
 
 class OsuCommands(commands.Cog):
     def __init__(self, bot, api):

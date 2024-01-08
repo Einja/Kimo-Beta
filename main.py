@@ -35,6 +35,5 @@ class Bot(commands.Bot):
         for ext in self.cogs_list:
             await self.load_extension(ext)
 
-
 bot = Bot()
 bot.run(bot.bot_token)

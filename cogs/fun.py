@@ -34,8 +34,9 @@ class FunCommands(commands.Cog):
         if 'owo' in message.content.lower():
             await message.channel.send("What's This?")
 
-        elif 'wafer' in message.content.lower():
-            await message.channel.send("wafer")
+        elif 'king' in message.content.lower():
+            gif_path = 'cogs/images_or_gifs/gg.gif'
+            await message.channel.send(file=discord.File(gif_path))
 
 async def setup(bot):
     await bot.add_cog(FunCommands(bot))
