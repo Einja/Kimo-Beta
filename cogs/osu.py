@@ -49,7 +49,38 @@ class OsuCommands(commands.Cog):
 
     @app_commands.command(name="rs", description="Fetch the most recent play of the user.")
     @app_commands.describe()
-    async def 
+    async def rs(self, ctx: discord.Interaction, username: str):
+        try:
+            user = self.api.user(username, key=UserLookupKey.USERNAME)
+            recent_score = self.api.user_scores(user.id, "recent", include_fails=True)[-1]
+            score_acc = str(round(recent_score.accuracy * 100, 2)) + '%'
+            beatmap = recent_score.beatmapset
+            artist = beatmap.artist
+            song_title = beatmap.title
+            mapper = beatmap.creator
+            '''
+            add the following:
+            score
+            letter grade
+            mods
+            difficulty name
+            stars
+            GD (if there is one)
+            link to mapset
+            pp
+            max combo
+            300 count
+            100 count
+            50 count
+            miss count
+            ''' 
+            
+            response = f'Recent score for {user.username}: \nBeatmap ID: {beatmap.id} \n{artist} - {song_title} \nMapset Host: {mapper}'
+            await ctx.response.send_message(response)
+        except IndexError:
+            # specify the mode
+            await ctx.response.send_message(f"User {user.username} has no recent plays!")
+
 
 async def setup(bot):
     api = bot.api
