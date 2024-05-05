@@ -35,12 +35,21 @@ class OsuCommands(commands.Cog):
                     mode = GameMode.OSU
                     gamemode_str = "standard"
             user = self.api.user(username, mode=mode, key=UserLookupKey.USERNAME)
-            response = f'Name: {user.username}. Current rank in {gamemode_str}: #{user.rank_history.data[-1]}'
+            if user.is_deleted or user.is_restricted:
+                raise Exception
+            if user.rank_history.data[-1] == 0:
+                raise AttributeError
+            pp_count = user.statistics.pp
+            response = f'Name: {user.username} \nCurrent rank in {gamemode_str}: #{user.rank_history.data[-1]} \nPerformance Points: {pp_count}'
             await ctx.response.send_message(response)
         except AttributeError:
             await ctx.response.send_message(f"User {username} has no recent plays in {gamemode_str} mode!")
-        except Exception as e:
+        except Exception:
             await ctx.response.send_message(f"User {username} not found! ;_; ")
+
+    @app_commands.command(name="rs", description="Fetch the most recent play of the user.")
+    @app_commands.describe()
+    async def 
 
 async def setup(bot):
     api = bot.api
