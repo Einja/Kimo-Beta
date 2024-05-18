@@ -52,18 +52,22 @@ class OsuCommands(commands.Cog):
     async def rs(self, ctx: discord.Interaction, username: str):
         try:
             user = self.api.user(username, key=UserLookupKey.USERNAME)
-            recent_score = self.api.user_scores(user.id, "recent", include_fails=True)[-1]
+            recent_score = self.api.user_scores(user.id, "recent", include_fails=True)[0]
+            print(recent_score)
             score_acc = str(round(recent_score.accuracy * 100, 2)) + '%'
-            beatmap = recent_score.beatmapset
-            artist = beatmap.artist
-            song_title = beatmap.title
-            mapper = beatmap.creator
+            # rank = recent_score.statistics.rank returns a Grade object, make parsing function
+            beatmapset = recent_score.beatmapset
+            artist = beatmapset.artist
+            song_title = beatmapset.title
+            mapset_host = beatmapset.creator
+            beatmap = recent_score.beatmap
+            diff_name = beatmap.version
+            star_rating = beatmap.difficulty_rating
             '''
             add the following:
             score
             letter grade
             mods
-            difficulty name
             stars
             GD (if there is one)
             link to mapset
@@ -74,8 +78,14 @@ class OsuCommands(commands.Cog):
             50 count
             miss count
             ''' 
-            
-            response = f'Recent score for {user.username}: \nBeatmap ID: {beatmap.id} \n{artist} - {song_title} \nMapset Host: {mapper}'
+            response = (
+                f"Recent score for {user.username}:\n"
+                f"Beatmap ID: {beatmapset.id}\n"
+                f"{artist} - {song_title} [{diff_name}]\n"
+                f"Mapset Host: {mapset_host}\n"
+                f"Accuracy: {score_acc}\n"
+                f"Difficulty: {star_rating}\n"
+            )
             await ctx.response.send_message(response)
         except IndexError:
             # specify the mode
