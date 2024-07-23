@@ -3,6 +3,7 @@ from discord.ext import commands
 from discord import app_commands
 from ossapi import GameMode, UserLookupKey
 
+
 class OsuCommands(commands.Cog):
     def __init__(self, bot, api):
         self.bot = bot
@@ -10,11 +11,13 @@ class OsuCommands(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        print(f'{self.__class__.__name__} cog has been loaded')
+        print(f"{self.__class__.__name__} cog has been loaded")
 
     @app_commands.command(name="stats", description="Fetch osu! player's stats")
-    @app_commands.describe(gamemode="Valid parameters are std, taiko, ctb, and mania. Typing anything else or leaving this blank will default to standard mode.")
-    async def stats(self, ctx: discord.Interaction, username: str, gamemode: str = ''):
+    @app_commands.describe(
+        gamemode="Valid parameters are std, taiko, ctb, and mania. Typing anything else or leaving this blank will default to standard mode."
+    )
+    async def stats(self, ctx: discord.Interaction, username: str, gamemode: str = ""):
         mode = ""
         gamemode_str = ""
         try:
@@ -40,21 +43,27 @@ class OsuCommands(commands.Cog):
             if user.rank_history.data[-1] == 0:
                 raise AttributeError
             pp_count = user.statistics.pp
-            response = f'Name: {user.username} \nCurrent rank in {gamemode_str}: #{user.rank_history.data[-1]} \nPerformance Points: {pp_count}'
+            response = f"Name: {user.username} \nCurrent rank in {gamemode_str}: #{user.rank_history.data[-1]} \nPerformance Points: {pp_count}"
             await ctx.response.send_message(response)
         except AttributeError:
-            await ctx.response.send_message(f"User {username} has no recent plays in {gamemode_str} mode!")
+            await ctx.response.send_message(
+                f"User {username} has no recent plays in {gamemode_str} mode!"
+            )
         except Exception:
             await ctx.response.send_message(f"User {username} not found! ;_; ")
 
-    @app_commands.command(name="rs", description="Fetch the most recent play of the user.")
+    @app_commands.command(
+        name="rs", description="Fetch the most recent play of the user."
+    )
     @app_commands.describe()
     async def rs(self, ctx: discord.Interaction, username: str):
         try:
             user = self.api.user(username, key=UserLookupKey.USERNAME)
-            recent_score = self.api.user_scores(user.id, "recent", include_fails=True)[0]
+            recent_score = self.api.user_scores(user.id, "recent", include_fails=True)[
+                0
+            ]
             print(recent_score)
-            score_acc = str(round(recent_score.accuracy * 100, 2)) + '%'
+            score_acc = str(round(recent_score.accuracy * 100, 2)) + "%"
             # rank = recent_score.statistics.rank returns a Grade object, make parsing function
             beatmapset = recent_score.beatmapset
             artist = beatmapset.artist
@@ -63,7 +72,7 @@ class OsuCommands(commands.Cog):
             beatmap = recent_score.beatmap
             diff_name = beatmap.version
             star_rating = beatmap.difficulty_rating
-            '''
+            """
             add the following:
             score
             letter grade
@@ -77,7 +86,7 @@ class OsuCommands(commands.Cog):
             100 count
             50 count
             miss count
-            ''' 
+            """
             response = (
                 f"Recent score for {user.username}:\n"
                 f"Beatmap ID: {beatmapset.id}\n"
@@ -89,7 +98,9 @@ class OsuCommands(commands.Cog):
             await ctx.response.send_message(response)
         except IndexError:
             # specify the mode
-            await ctx.response.send_message(f"User {user.username} has no recent plays!")
+            await ctx.response.send_message(
+                f"User {user.username} has no recent plays!"
+            )
 
 
 async def setup(bot):
