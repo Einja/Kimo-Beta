@@ -39,5 +39,6 @@ class FunCommands(commands.Cog):
         if "owo" in message.content.lower():
             await message.channel.send("What's This?")
 
+
 async def setup(bot):
     await bot.add_cog(FunCommands(bot))

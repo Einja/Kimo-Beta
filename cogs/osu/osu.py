@@ -5,6 +5,7 @@ from ossapi import GameMode, UserLookupKey, Score, User
 from pprint import pprint
 from .utils.parse_score_rank import parse_score_rank
 
+
 class OsuCommands(commands.Cog):
     def __init__(self, bot, api):
         self.bot = bot
@@ -60,12 +61,13 @@ class OsuCommands(commands.Cog):
     async def rs(self, ctx: discord.Interaction, username: str):
         try:
             user = self.api.user(username, key=UserLookupKey.USERNAME)
-            recent_score = self.api.user_scores(user.id, "recent", include_fails=True)[0]
+            recent_score = self.api.user_scores(user.id, "recent", include_fails=True)
+            recent_score = recent_score[0]
             assert isinstance(user, User)
             assert isinstance(recent_score, Score)
             # This is here until implementation finishes
             pprint(recent_score, width=1)
-            
+
             score = recent_score.score
             score_acc = str(round(recent_score.accuracy * 100, 2)) + "%"
             # rank = parse_score_rank(recent_score.rank)
@@ -80,7 +82,9 @@ class OsuCommands(commands.Cog):
             beatmap_id = beatmap.id
             diff_name = beatmap.version
             mods = recent_score.mods.short_name()
-            star_rating = self.api.beatmap_attributes(beatmap_id=beatmap_id, mods=mods, ruleset=recent_score.mode).attributes.star_rating
+            star_rating = self.api.beatmap_attributes(
+                beatmap_id=beatmap_id, mods=mods, ruleset=recent_score.mode
+            ).attributes.star_rating
             star_rating = round(star_rating, 2)
             pp = recent_score.pp
             """
@@ -105,7 +109,6 @@ class OsuCommands(commands.Cog):
                 f"Rank achieved: {rank}\n"
                 f"Mods used: {mods}\n"
                 f"Difficulty: {star_rating}\n"
-                
             )
             await ctx.response.send_message(response)
         except IndexError:

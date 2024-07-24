@@ -4,6 +4,7 @@ from ossapi import *
 import json
 from pathlib import Path
 
+
 class Bot(commands.Bot):
 
     def __init__(self):
@@ -28,7 +29,7 @@ class Bot(commands.Bot):
             if "_" not in path:
                 cogs.append(f"cogs.{path}.{path}")
         return cogs
-    
+
     async def on_ready(self):
         print(f"Logged in as {self.user}")
         try:
