@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 from ossapi import *
 import json
-
+from pathlib import Path
 
 class Bot(commands.Bot):
 
@@ -11,7 +11,7 @@ class Bot(commands.Bot):
             command_prefix=commands.when_mentioned_or("."),
             intents=discord.Intents.all(),
         )
-        self.cogs_list = ["cogs.osu", "cogs.fun"]
+        self.cogs_list = self.load_cogs()
         with open("config.json") as f:
             config = json.load(f)
         self.bot_token = config["bot_token"]
@@ -20,6 +20,15 @@ class Bot(commands.Bot):
         self.guild_id = config["guild_id"]
         self.api = Ossapi(self.client_id, self.client_secret)
 
+    def load_cogs(self):
+        cogs = []
+        cogs_dir = Path("./cogs")
+        for path in cogs_dir.iterdir():
+            path = path.name
+            if "_" not in path:
+                cogs.append(f"cogs.{path}.{path}")
+        return cogs
+    
     async def on_ready(self):
         print(f"Logged in as {self.user}")
         try:
@@ -31,7 +40,7 @@ class Bot(commands.Bot):
         except Exception as e:
             print(e)
 
-    async def on_command_error(self, error, ctx):
+    async def on_command_error(self, ctx, error):
         if isinstance(error, commands.CommandNotFound):
             pass
 

@@ -1,8 +1,9 @@
 import discord
 from discord.ext import commands
 from discord import app_commands
-from ossapi import GameMode, UserLookupKey
-
+from ossapi import GameMode, UserLookupKey, Score, User
+from pprint import pprint
+from .utils.parse_score_rank import parse_score_rank
 
 class OsuCommands(commands.Cog):
     def __init__(self, bot, api):
@@ -59,25 +60,31 @@ class OsuCommands(commands.Cog):
     async def rs(self, ctx: discord.Interaction, username: str):
         try:
             user = self.api.user(username, key=UserLookupKey.USERNAME)
-            recent_score = self.api.user_scores(user.id, "recent", include_fails=True)[
-                0
-            ]
-            print(recent_score)
+            recent_score = self.api.user_scores(user.id, "recent", include_fails=True)[0]
+            assert isinstance(user, User)
+            assert isinstance(recent_score, Score)
+            # This is here until implementation finishes
+            pprint(recent_score, width=1)
+            
+            score = recent_score.score
             score_acc = str(round(recent_score.accuracy * 100, 2)) + "%"
-            # rank = recent_score.statistics.rank returns a Grade object, make parsing function
+            # rank = parse_score_rank(recent_score.rank)
+            # Grade obj with <enum 'Grade'>
+            rank = recent_score.rank
             beatmapset = recent_score.beatmapset
+            beatmapset_id = beatmapset.id
             artist = beatmapset.artist
             song_title = beatmapset.title
             mapset_host = beatmapset.creator
             beatmap = recent_score.beatmap
+            beatmap_id = beatmap.id
             diff_name = beatmap.version
-            star_rating = beatmap.difficulty_rating
+            mods = recent_score.mods.short_name()
+            star_rating = self.api.beatmap_attributes(beatmap_id=beatmap_id, mods=mods, ruleset=recent_score.mode).attributes.star_rating
+            star_rating = round(star_rating, 2)
+            pp = recent_score.pp
             """
             add the following:
-            score
-            letter grade
-            mods
-            stars
             GD (if there is one)
             link to mapset
             pp
@@ -89,11 +96,16 @@ class OsuCommands(commands.Cog):
             """
             response = (
                 f"Recent score for {user.username}:\n"
-                f"Beatmap ID: {beatmapset.id}\n"
+                f"Beatmap ID: {beatmapset_id}\n"
                 f"{artist} - {song_title} [{diff_name}]\n"
                 f"Mapset Host: {mapset_host}\n"
+                f"Total Score: {score}\n"
+                f"PP: {pp}\n"
                 f"Accuracy: {score_acc}\n"
+                f"Rank achieved: {rank}\n"
+                f"Mods used: {mods}\n"
                 f"Difficulty: {star_rating}\n"
+                
             )
             await ctx.response.send_message(response)
         except IndexError:
