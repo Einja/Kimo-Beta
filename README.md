@@ -32,9 +32,4 @@ This Discord bot is designed to interact with users and provide specific osu! st
 - **Usage**: Check a certain osu! player's recent score.
 
 ## Installation and Setup
-If you would like to simulate this on your own discord bot, follow the instructions listed (You MUST have your own discord bot, discord server, and OAuth Application to use this).
-1) Download this source code.
-2) Open your terminal, go to config.json and replace the filler values with actual tokens.
-3) Run `pip install -r requirements.txt`
-4) Execute main.py
-5) To shutdown, press Ctrl+C while in the terminal.
+Soon... (the bot is NOT public yet lol)
