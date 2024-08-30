@@ -3,7 +3,8 @@ from discord.ext import commands
 from discord import app_commands
 from ossapi import GameMode, UserLookupKey, Score, User
 from pprint import pprint
-from .utils.parse_score_rank import parse_score_rank
+# will use a discord embed, so this string func might not be needed.
+# from .utils.parse_score_rank import parse_score_rank
 
 
 class OsuCommands(commands.Cog):
