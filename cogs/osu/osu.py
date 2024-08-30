@@ -87,12 +87,10 @@ class OsuCommands(commands.Cog):
                 beatmap_id=beatmap_id, mods=mods, ruleset=recent_score.mode
             ).attributes.star_rating
             star_rating = round(star_rating, 2)
-            pp = recent_score.pp
+            pp = recent_score.pp if recent_score.pp else 0
+            map_link = beatmap.url
             """
             add the following:
-            GD (if there is one)
-            link to mapset
-            pp
             max combo
             300 count
             100 count
@@ -110,6 +108,7 @@ class OsuCommands(commands.Cog):
                 f"Rank achieved: {rank}\n"
                 f"Mods used: {mods}\n"
                 f"Difficulty: {star_rating}\n"
+                f"[Map link]({map_link})\n"
             )
             await ctx.response.send_message(response)
         except IndexError:
