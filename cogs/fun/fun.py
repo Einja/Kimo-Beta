@@ -38,6 +38,8 @@ class FunCommands(commands.Cog):
 
         if "owo" in message.content.lower():
             await message.channel.send("What's This?")
+        elif "fussy" in message.content.lower():
+            await message.channel.send("shut the FUSSY up")
 
 
 async def setup(bot):
